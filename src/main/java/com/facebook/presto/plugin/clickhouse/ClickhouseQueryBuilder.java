@@ -23,6 +23,7 @@ import com.facebook.presto.spi.type.TimestampWithTimeZoneType;
 import com.facebook.presto.spi.type.TinyintType;
 import com.facebook.presto.spi.type.Type;
 import com.facebook.presto.spi.type.VarcharType;
+import com.facebook.presto.spi.type.ArrayType;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import io.airlift.slice.Slice;
@@ -34,6 +35,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -179,6 +181,9 @@ public class ClickhouseQueryBuilder
             else if (typeAndValue.getType() instanceof CharType) {
                 statement.setString(i + 1, ((Slice) typeAndValue.getValue()).toStringUtf8());
             }
+            else if (typeAndValue.getType() instanceof ArrayType) {
+                statement.setArray(i + 1, ((Array) typeAndValue.getValue())) ;
+            }
             else {
                 throw new UnsupportedOperationException("Can't handle type: " + typeAndValue.getType());
             }
@@ -203,7 +208,8 @@ public class ClickhouseQueryBuilder
                 validType.equals(TimestampType.TIMESTAMP) ||
                 validType.equals(TimestampWithTimeZoneType.TIMESTAMP_WITH_TIME_ZONE) ||
                 validType instanceof VarcharType ||
-                validType instanceof CharType;
+                validType instanceof CharType || 
+                validType instanceof ArrayType;
     }
 
     private List<String> toConjuncts(List<JdbcColumnHandle> columns, TupleDomain<ColumnHandle> tupleDomain, List<ClickhouseQueryBuilder.ClickhouseTypeAndValue> accumulator)
@@ -216,6 +222,8 @@ public class ClickhouseQueryBuilder
                 if (domain != null) {
                     builder.add(toPredicate(column.getColumnName(), domain, type, accumulator));
                 }
+            }else{
+                System.out.println("error accept type: " + type.getTypeSignature());
             }
         }
         return builder.build();
