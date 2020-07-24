@@ -6,7 +6,7 @@
 
     <groupId>com.facebook.presto</groupId>
     <artifactId>presto-clickhouse</artifactId>
-    <version>0.229</version>
+    <version>0.238.1</version>
 
     <properties>
         <scala.binary.version>2.11</scala.binary.version>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.facebook.presto</groupId>
             <artifactId>presto-spi</artifactId>
-            <version>0.229</version>
+            <version>0.238.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.facebook.presto</groupId>
             <artifactId>presto-base-jdbc</artifactId>
-            <version>0.229</version>
+            <version>0.238.1</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
